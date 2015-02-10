@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">BluetoothController</string>
+    <string name="button_text">Send</string>
+    <string name="action_settings">Settings</string>
+    <string name="unsupport_bluetooth">This device doesn\'t support bluetooth.</string>
+    <string name="disable_bluetooth">Please enable Bluetooth and try again.</string>
+
+</resources>
