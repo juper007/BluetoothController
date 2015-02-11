@@ -38,9 +38,35 @@ public class MainActivity extends ActionBarActivity {
 
     // on send button click
     public void sendMessage(View view) {
-        EditText message = (EditText) findViewById(R.id.message_edit);
-        send_message(message.getText().toString());
-        message.setText("");
+        switch (view.getId()) {
+            case R.id.send_button:
+                EditText message = (EditText) findViewById(R.id.message_edit);
+                send_message(message.getText().toString());
+                message.setText("");
+                break;
+            case R.id.led_yellow_on_button:
+                send_message("LED11");
+                break;
+            case R.id.led_red_on_button:
+                send_message("LED21");
+                break;
+            case R.id.led_blue_on_button:
+                send_message("LED31");
+                break;
+            case R.id.led_yellow_off_button:
+                send_message("LED10");
+                break;
+            case R.id.led_red_off_button:
+                send_message("LED20");
+                break;
+            case R.id.led_blue_off_button:
+                send_message("LED30");
+                break;
+            case R.id.exit_button:
+                send_message("exit");
+                finish();
+        }
+
     }
 
     public void startBluetoothServer() {
@@ -125,7 +151,13 @@ public class MainActivity extends ActionBarActivity {
                 case Common.MESSAGE_READ:
                     byte[] readBuf = (byte[]) msg.obj;
                     String readMessage = new String(readBuf, 0, msg.arg1);
+                    String cmd = readMessage.substring(0,3);
+                    switch (cmd) {
+                        case "IMG":
+
+                    }
                     display_message("<= " + readMessage);
+                    break;
                 case Common.MESSAGE_WRITE:
                     byte[] writeBuf = (byte[]) msg.obj;
                     String writeMessage = new String(writeBuf);

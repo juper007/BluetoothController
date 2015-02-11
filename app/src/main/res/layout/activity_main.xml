@@ -1,4 +1,4 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -7,27 +7,97 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     android:paddingBottom="@dimen/activity_vertical_margin"
     tools:context=".MainActivity"
+    android:orientation="vertical">
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <EditText
+            android:id="@+id/message_edit"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:inputType="text" />
+        <Button
+            android:id="@+id/send_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/button_text"
+            android:onClick="sendMessage"/>
+    </LinearLayout>
+    <LinearLayout
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
     android:orientation="horizontal">
-
     <Button
-        android:id="@+id/send_button"
-        android:layout_width="wrap_content"
+        android:id="@+id/led_yellow_on_button"
+        android:layout_width="0dp"
+        android:layout_weight="1"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
-        android:text="@string/button_text"
+        android:text="@string/led_yellow_on_button_text"
         android:onClick="sendMessage"/>
-    <EditText
-        android:id="@+id/message_edit"
-        android:layout_width="wrap_content"
+    <Button
+        android:id="@+id/led_yellow_off_button"
+        android:layout_width="0dp"
+        android:layout_weight="1"
         android:layout_height="wrap_content"
-        android:layout_toLeftOf="@id/send_button"
-        android:layout_alignParentLeft="true"
-        android:inputType="text" />
+        android:layout_alignParentRight="true"
+        android:text="@string/led_yellow_off_button_text"
+        android:onClick="sendMessage"/>
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <Button
+            android:id="@+id/led_red_on_button"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:text="@string/led_red_on_button_text"
+            android:onClick="sendMessage"/>
+        <Button
+            android:id="@+id/led_red_off_button"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:text="@string/led_red_off_button_text"
+            android:onClick="sendMessage"/>
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <Button
+            android:id="@+id/led_blue_on_button"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:text="@string/led_blue_on_button_text"
+            android:onClick="sendMessage"/>
+        <Button
+            android:id="@+id/led_blue_off_button"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:text="@string/led_blue_off_button_text"
+            android:onClick="sendMessage"/>
+    </LinearLayout>
+    <Button
+        android:id="@+id/exit_button"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:text="@string/exit_button_text"
+        android:onClick="sendMessage"/>
     <ListView
         android:id="@+id/message_listView"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_below="@id/send_button"/>
+        android:layout_height="wrap_content"/>
 
-</RelativeLayout>
+</LinearLayout>
