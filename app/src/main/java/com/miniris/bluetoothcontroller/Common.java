@@ -12,4 +12,7 @@ public interface Common {
 
     public final int MESSAGE_READ = 0;
     public final int MESSAGE_WRITE = 1;
+
+    public final int COMMAND_UNKNOWN = 0;
+    public final int COMMAND_IMG = 1;
 }

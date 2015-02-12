@@ -169,44 +169,14 @@ public class MainActivity extends ActionBarActivity {
         public void handleMessage(Message msg) {
             switch (msg.what) {
                 case Common.MESSAGE_READ:
-                    byte[] readBuf = (byte[]) msg.obj;
-                    if (isGettingData) {
-                        if (expectDataLength < currentPosition + readBuf.length)
-                        {
-                            int restSize = expectDataLength - currentPosition;
-                            byte[] tmp = new byte[restSize];
-                            System.arraycopy(readBuf, 0, tmp, 0, restSize);
-                            readBuf = tmp;
-                        }
-                        System.arraycopy(readBuf, 0, imageData, currentPosition, readBuf.length-1);
-                       currentPosition += readBuf.length;
-
-                        if (currentPosition >= expectDataLength) {
-                            display_message("Image Download is done.");
-                            display_image(imageData);
-                            display_message("" + imageData.length);
-                            isGettingData = false;
-                            expectDataLength = 0;
-                            currentPosition = 0;
-                            imageData = null;
-                        }
-                    } else {
-                        //String readMessage = new String(readBuf, 0, msg.arg1);
-                        String cmd = new String(readBuf, 0, 3);
-                        display_message(cmd);
-
-                        switch (cmd) {
-                            case "IMG":
-                                expectDataLength = Integer.parseInt(new String(readBuf, 3, 10));
-                                display_message("Image size : " + expectDataLength);
-                                imageData = new byte[expectDataLength];
-                                System.arraycopy(readBuf, 13, imageData, 0, readBuf.length - 13);
-                                isGettingData = true;
-                                break;
-                            default:
-                                display_message("<= " + readBuf.toString());
-                                break;
-                        }
+                    switch (msg.arg1) {
+                        case Common.COMMAND_IMG:
+                            byte[] readBuf = (byte[]) msg.obj;
+                            display_image(readBuf);
+                            break;
+                        default:
+                            display_message("Unknown command : " + msg.arg1);
+                            break;
                     }
                     break;
                 case Common.MESSAGE_WRITE:
@@ -220,7 +190,8 @@ public class MainActivity extends ActionBarActivity {
 
     private void display_image(byte[] imageData) {
         ImageView imageView = (ImageView) findViewById(R.id.imageView);
-        Bitmap bmpImage = BitmapFactory.decodeByteArray(imageData, 0, imageData.length);
+        ByteArrayInputStream imageStream = new ByteArrayInputStream(imageData);
+        Bitmap bmpImage = BitmapFactory.decodeStream(imageStream);
         imageView.setImageBitmap(bmpImage);
     }
 }

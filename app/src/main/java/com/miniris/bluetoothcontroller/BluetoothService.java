@@ -111,15 +111,27 @@ public class BluetoothService {
         }
 
         public void run() {
-            byte[] buffer = new byte[1024];
-            int bytes;
+            byte[] cmd = new byte[2];
 
             while (true) {
                 try {
-                    bytes = inStream.read(buffer);
-
-                    mHandler.obtainMessage(Common.MESSAGE_READ, bytes, -1, buffer)
-                            .sendToTarget();
+                    inStream.read(cmd);
+                    int cmdCode = Integer.parseInt(cmd.toString());
+                    switch (cmdCode) {
+                        case Common.COMMAND_IMG:
+                            byte[] sizeBuff = new byte[10];
+                            inStream.read(sizeBuff);
+                            int size = Integer.parseInt(sizeBuff.toString());
+                            byte[] buff = new byte[size];
+                            inStream.read(buff);
+                            mHandler.obtainMessage(Common.MESSAGE_READ, Common.COMMAND_IMG, -1, buff)
+                                    .sendToTarget();
+                            break;
+                        default:
+                            mHandler.obtainMessage(Common.MESSAGE_READ, cmdCode, -1, -1)
+                                    .sendToTarget();
+                            break;
+                    }
                 } catch (IOException e) {
                     break;
                 }
