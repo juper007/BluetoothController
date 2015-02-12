@@ -92,12 +92,17 @@
         android:id="@+id/exit_button"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
         android:text="@string/exit_button_text"
         android:onClick="sendMessage"/>
-    <ListView
+   <ListView
         android:id="@+id/message_listView"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="fill_parent"
+       android:visibility="gone"/>
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:contentDescription="@string/image_text" />
 
 </LinearLayout>

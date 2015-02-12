@@ -2,6 +2,8 @@ package com.miniris.bluetoothcontroller;
 
 import android.bluetooth.BluetoothAdapter;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Message;
 import android.support.v7.app.ActionBarActivity;
@@ -10,16 +12,24 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Toast;
 import android.os.Handler;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.util.Arrays;
 
 
 public class MainActivity extends ActionBarActivity {
     private ArrayAdapter<String> messageAdapter;
     private BluetoothService mBluetoothService;
+    private Boolean isGettingData = false;
+    private byte[] imageData;
+    private int expectDataLength;
+    private int currentPosition = 0;
 
     public void displayToast(int stringId) {
         Toast mToast = Toast.makeText(this,stringId, Toast.LENGTH_SHORT);
@@ -144,19 +154,60 @@ public class MainActivity extends ActionBarActivity {
         }
     }
 
+    public static int byteArrayToInt(byte[] b)
+    {
+        int value = 0;
+        for (int i = 0; i < 4; i++) {
+            int shift = (4 - 1 - i) * 8;
+            value += (b[i] & 0x000000FF) << shift;
+        }
+        return value;
+    }
+
     final Handler mHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
             switch (msg.what) {
                 case Common.MESSAGE_READ:
                     byte[] readBuf = (byte[]) msg.obj;
-                    String readMessage = new String(readBuf, 0, msg.arg1);
-                    String cmd = readMessage.substring(0,3);
-                    switch (cmd) {
-                        case "IMG":
+                    if (isGettingData) {
+                        if (expectDataLength < currentPosition + readBuf.length)
+                        {
+                            int restSize = expectDataLength - currentPosition;
+                            byte[] tmp = new byte[restSize];
+                            System.arraycopy(readBuf, 0, tmp, 0, restSize);
+                            readBuf = tmp;
+                        }
+                        System.arraycopy(readBuf, 0, imageData, currentPosition, readBuf.length-1);
+                       currentPosition += readBuf.length;
 
+                        if (currentPosition >= expectDataLength) {
+                            display_message("Image Download is done.");
+                            display_image(imageData);
+                            display_message("" + imageData.length);
+                            isGettingData = false;
+                            expectDataLength = 0;
+                            currentPosition = 0;
+                            imageData = null;
+                        }
+                    } else {
+                        //String readMessage = new String(readBuf, 0, msg.arg1);
+                        String cmd = new String(readBuf, 0, 3);
+                        display_message(cmd);
+
+                        switch (cmd) {
+                            case "IMG":
+                                expectDataLength = Integer.parseInt(new String(readBuf, 3, 10));
+                                display_message("Image size : " + expectDataLength);
+                                imageData = new byte[expectDataLength];
+                                System.arraycopy(readBuf, 13, imageData, 0, readBuf.length - 13);
+                                isGettingData = true;
+                                break;
+                            default:
+                                display_message("<= " + readBuf.toString());
+                                break;
+                        }
                     }
-                    display_message("<= " + readMessage);
                     break;
                 case Common.MESSAGE_WRITE:
                     byte[] writeBuf = (byte[]) msg.obj;
@@ -166,4 +217,10 @@ public class MainActivity extends ActionBarActivity {
             }
         }
     };
+
+    private void display_image(byte[] imageData) {
+        ImageView imageView = (ImageView) findViewById(R.id.imageView);
+        Bitmap bmpImage = BitmapFactory.decodeByteArray(imageData, 0, imageData.length);
+        imageView.setImageBitmap(bmpImage);
+    }
 }
