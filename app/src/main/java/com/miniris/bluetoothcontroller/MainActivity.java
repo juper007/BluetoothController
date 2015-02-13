@@ -19,20 +19,19 @@ import android.os.Handler;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.util.Arrays;
 
 
 public class MainActivity extends ActionBarActivity {
     private ArrayAdapter<String> messageAdapter;
     private BluetoothService mBluetoothService;
-    private Boolean isGettingData = false;
-    private byte[] imageData;
-    private int expectDataLength;
-    private int currentPosition = 0;
 
     public void displayToast(int stringId) {
         Toast mToast = Toast.makeText(this,stringId, Toast.LENGTH_SHORT);
+        mToast.show();
+    }
+
+    public void displayToast(String msg) {
+        Toast mToast = Toast.makeText(this, msg, Toast.LENGTH_SHORT);
         mToast.show();
     }
 
@@ -71,6 +70,9 @@ public class MainActivity extends ActionBarActivity {
                 break;
             case R.id.led_blue_off_button:
                 send_message("LED30");
+                break;
+            case R.id.photo_button:
+                send_message("IMG");
                 break;
             case R.id.exit_button:
                 send_message("exit");
@@ -152,16 +154,6 @@ public class MainActivity extends ActionBarActivity {
         if (mBluetoothService != null) {
             mBluetoothService.stop();
         }
-    }
-
-    public static int byteArrayToInt(byte[] b)
-    {
-        int value = 0;
-        for (int i = 0; i < 4; i++) {
-            int shift = (4 - 1 - i) * 8;
-            value += (b[i] & 0x000000FF) << shift;
-        }
-        return value;
     }
 
     final Handler mHandler = new Handler() {

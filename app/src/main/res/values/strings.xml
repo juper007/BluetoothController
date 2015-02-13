@@ -12,6 +12,7 @@
     <string name="led_red_off_button_text">Red Off</string>
     <string name="led_blue_on_button_text">Blue On</string>
     <string name="led_blue_off_button_text">Blue Off</string>
+    <string name="photo_button_text">Take a Photo</string>
     <string name="exit_button_text">Exit</string>
     <string name="image_text">Image</string>
 </resources>
