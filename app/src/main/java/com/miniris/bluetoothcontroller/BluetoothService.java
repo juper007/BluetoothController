@@ -116,15 +116,22 @@ public class BluetoothService {
             while (true) {
                 try {
                     inStream.read(cmd);
-                    int cmdCode = Integer.parseInt(cmd.toString());
+                    int cmdCode = Integer.parseInt(new String(cmd));
                     switch (cmdCode) {
                         case Common.COMMAND_IMG:
                             byte[] sizeBuff = new byte[10];
                             inStream.read(sizeBuff);
-                            int size = Integer.parseInt(sizeBuff.toString());
+                            int size = Integer.parseInt(new String(sizeBuff));
                             byte[] buff = new byte[size];
-                            inStream.read(buff);
-                            mHandler.obtainMessage(Common.MESSAGE_READ, Common.COMMAND_IMG, -1, buff)
+                            byte[] tmpBuff = new byte[1024];
+                            int pos = 0;
+
+                            while (pos < size) {
+                                int readSize = inStream.read(tmpBuff);
+                                System.arraycopy(tmpBuff, 0, buff, pos, readSize);
+                                pos += readSize;
+                            }
+                            mHandler.obtainMessage(Common.MESSAGE_READ, Common.COMMAND_IMG, size, buff)
                                     .sendToTarget();
                             break;
                         default:

@@ -89,6 +89,12 @@
             android:onClick="sendMessage"/>
     </LinearLayout>
     <Button
+        android:id="@+id/photo_button"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/photo_button_text"
+        android:onClick="sendMessage"/>
+    <Button
         android:id="@+id/exit_button"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
